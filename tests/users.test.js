@@ -30,11 +30,11 @@ describe("GET /api/users/:id", () => {
 describe("POST /api/users", () => {
   it("should return created user", async () => {
     const newUser = {
-      firstname: "Robin",
-      lastname: "Desbois",
+      firstname: "TestUser",
+      lastname: "UserTest",
       email: `${crypto.randomUUID()}@test.com`,
-      city: "Sherwood",
-      language: "English",
+      city: "Zalsace",
+      language: "French",
     };
 
     const response = await request(app).post("/api/users").send(newUser);
@@ -64,18 +64,18 @@ describe("POST /api/users", () => {
       .post("/api/users")
       .send(userWithMissingProps);
 
-    expect(response.status).toEqual(500);
+    expect(response.status).toEqual(422);
   });
 });
 
 describe("PUT /api/users/:id", () => {
   it("should edit user", async () => {
     const newUser = {
-      firstname: "San",
-      lastname: "Goku",
+      firstname: "Faker",
+      lastname: "The Goat",
       email: `${crypto.randomUUID()}@skt.com`,
-      city: "Namek",
-      language: "Japan",
+      city: "Seoul",
+      language: "Korean",
     };
 
     const [result] = await database.query(
@@ -92,11 +92,11 @@ describe("PUT /api/users/:id", () => {
     const id = result.insertId;
 
     const updatedUser = {
-      firstname: "Denis",
-      lastname: "Lamalice",
+      firstname: "Ruler",
+      lastname: "JDG",
       email: `${crypto.randomUUID()}@jdg.com`,
-      city: "Lens",
-      language: "French",
+      city: "Seoul",
+      language: "Korean",
     };
 
     const response = await request(app)
@@ -131,25 +131,25 @@ describe("PUT /api/users/:id", () => {
   });
 
   it("should return an error", async () => {
-    const userWithMissingProps = { firstname: "Bobby" };
+    const userWithMissingProps = { firstname: "Capsnotenoughprops" };
 
     const response = await request(app)
       .put(`/api/users/1`)
       .send(userWithMissingProps);
 
-    expect(response.status).toEqual(500);
+    expect(response.status).toEqual(422);
   });
 
-  it("should return no user", async () => {
-    const newUser = {
-      firstname: "Bob",
-      lastname: "Lenon",
+  it("should return no movie", async () => {
+    const newMovie = {
+      firstname: "Caps",
+      lastname: "G2",
       email: `${crypto.randomUUID()}@g2.com`,
-      city: "Blancherive",
-      language: "French",
+      city: "Berlin",
+      language: "English",
     };
 
-    const response = await request(app).put("/api/users/0").send(newUser);
+    const response = await request(app).put("/api/users/0").send(newMovie);
 
     expect(response.status).toEqual(404);
   });
