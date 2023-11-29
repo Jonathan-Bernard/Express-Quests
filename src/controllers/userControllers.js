@@ -2,7 +2,7 @@ const database = require("../../database");
 
 const getUsers = (req, res) => {
   database
-    .query("select * from users")
+    .query("SELECT * FROM users")
     .then(([users]) => {
       res.json(users);
     })
@@ -15,10 +15,10 @@ const getUsers = (req, res) => {
 const getUsersById = (req, res) => {
   const id = parseInt(req.params.id);
   database
-    .query("select * from users where id=?", [id])
-    .then(([users]) => {
-      if (users[0] != null) {
-        res.json(users[0]);
+    .query("SELECT * FROM users where id = ?", [id])
+    .then(([user]) => {
+      if (user[0] != null) {
+        res.json(user[0]);
       } else {
         res.sendStatus(404);
       }
@@ -34,7 +34,7 @@ const postUser = (req, res) => {
 
   database
     .query(
-      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?,?,?,?,?)",
       [firstname, lastname, email, city, language]
     )
     .then(([result]) => {
@@ -57,9 +57,9 @@ const updateUser = (req, res) => {
     )
     .then(([result]) => {
       if (result.affectedRows === 0) {
-        res.status(404);
+        res.sendStatus(404);
       } else {
-        res.status(204);
+        res.sendStatus(204);
       }
     })
     .catch((err) => {
