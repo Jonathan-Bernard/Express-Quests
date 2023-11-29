@@ -30,10 +30,10 @@ describe("GET /api/users/:id", () => {
 describe("POST /api/users", () => {
   it("should return created user", async () => {
     const newUser = {
-      firstname: "TestUser",
-      lastname: "UserTest",
+      firstname: "Denis",
+      lastname: "Lamalice",
       email: `${crypto.randomUUID()}@test.com`,
-      city: "Zalsace",
+      city: "Lens",
       language: "French",
     };
 
@@ -71,11 +71,11 @@ describe("POST /api/users", () => {
 describe("PUT /api/users/:id", () => {
   it("should edit user", async () => {
     const newUser = {
-      firstname: "Faker",
-      lastname: "The Goat",
+      firstname: "Bob",
+      lastname: "Lenon",
       email: `${crypto.randomUUID()}@skt.com`,
-      city: "Seoul",
-      language: "Korean",
+      city: "Cyrodil",
+      language: "French",
     };
 
     const [result] = await database.query(
@@ -92,11 +92,11 @@ describe("PUT /api/users/:id", () => {
     const id = result.insertId;
 
     const updatedUser = {
-      firstname: "Ruler",
-      lastname: "JDG",
+      firstname: "Karen",
+      lastname: "Aigri",
       email: `${crypto.randomUUID()}@jdg.com`,
-      city: "Seoul",
-      language: "Korean",
+      city: "Kensas-city",
+      language: "English",
     };
 
     const response = await request(app)
@@ -140,16 +140,16 @@ describe("PUT /api/users/:id", () => {
     expect(response.status).toEqual(422);
   });
 
-  it("should return no movie", async () => {
-    const newMovie = {
-      firstname: "Caps",
-      lastname: "G2",
+  it("should return no user", async () => {
+    const newUser = {
+      firstname: "Seb",
+      lastname: "Lafrite",
       email: `${crypto.randomUUID()}@g2.com`,
-      city: "Berlin",
-      language: "English",
+      city: "Maubeuge",
+      language: "French",
     };
 
-    const response = await request(app).put("/api/users/0").send(newMovie);
+    const response = await request(app).put("/api/users/0").send(newUser);
 
     expect(response.status).toEqual(404);
   });
