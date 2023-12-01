@@ -1,14 +1,32 @@
 const database = require("../../database");
 
 const getUsers = (req, res) => {
+  let sql = "SELECT * FROM users";
+  const sqlValues = [];
+
+  console.log("Requête reçue:", req.query);
+
+  if (req.query.language) {
+    sql += " WHERE language = ?";
+    sqlValues.push(req.query.language);
+
+    if (req.query.city) {
+      sql += " AND city = ?";
+      sqlValues.push(req.query.city);
+    }
+  } else if (req.query.city) {
+    sql += " WHERE city = ?";
+    sqlValues.push(req.query.city);
+  }
+
   database
-    .query("SELECT * FROM users")
-    .then(([users]) => {
-      res.json(users);
+    .query(sql, sqlValues)
+    .then(([results]) => {
+      res.json(results);
     })
     .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+      console.error("Erreur lors de l'exécution de la requête SQL:", err);
+      res.status(500).send("Erreur lors de la récupération des utilisateurs");
     });
 };
 
@@ -83,7 +101,7 @@ const deleteUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.sendStatus(422);
+      res.sendStatus(500);
     });
 };
 
