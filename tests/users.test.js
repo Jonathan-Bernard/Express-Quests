@@ -103,6 +103,7 @@ describe("PUT /api/users/:id", () => {
       .put(`/api/users/${id}`)
       .send(updatedUser);
 
+    expect(response.headers["content-type"]).toMatch(/json/);
     expect(response.status).toEqual(204);
 
     const [results] = await database.query(

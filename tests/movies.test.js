@@ -56,6 +56,18 @@ describe("POST /api/movies", () => {
 
     expect(movieInDatabase).toHaveProperty("title");
     expect(movieInDatabase.title).toStrictEqual(newMovie.title);
+
+    expect(movieInDatabase).toHaveProperty("director");
+    expect(movieInDatabase.director).toStrictEqual(newMovie.director);
+
+    expect(movieInDatabase).toHaveProperty("year");
+    expect(movieInDatabase.year).toStrictEqual(newMovie.year);
+
+    expect(movieInDatabase).toHaveProperty("color");
+    expect(movieInDatabase.color).toStrictEqual(newMovie.color);
+
+    expect(movieInDatabase).toHaveProperty("duration");
+    expect(movieInDatabase.duration).toStrictEqual(newMovie.duration);
   });
 
   it("should return an error", async () => {
@@ -104,6 +116,7 @@ describe("PUT /api/movies/:id", () => {
       .put(`/api/movies/${id}`)
       .send(updatedMovie);
 
+    expect(response.headers["content-type"]).toMatch(/json/);
     expect(response.status).toEqual(204);
 
     const [results] = await database.query(
@@ -151,6 +164,58 @@ describe("PUT /api/movies/:id", () => {
     };
 
     const response = await request(app).put("/api/movies/0").send(newMovie);
+
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/movies/:id", () => {
+  it("should delete movie", async () => {
+    const newMovie = {
+      title: "Rambo",
+      director: "Ted Kotcheff",
+      year: "1982",
+      color: "1",
+      duration: 93,
+    };
+
+    const [result] = await database.query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [
+        newMovie.title,
+        newMovie.director,
+        newMovie.year,
+        newMovie.color,
+        newMovie.duration,
+      ]
+    );
+
+    const id = result.insertId;
+
+    const response = await request(app).delete(`/api/movies/${id}`);
+
+    expect(response.headers["content-type"]).toMatch(/json/);
+    expect(response.status).toEqual(204);
+
+    const [deletedMovie] = await database.query(
+      "SELECT * FROM movies WHERE id = ?",
+      id
+    );
+
+    const hasBeenDeleted = deletedMovie[0];
+    expect(hasBeenDeleted).toBeUndefined();
+  });
+
+  it("should return no movie", async () => {
+    const newMovie = {
+      title: "Rambo",
+      director: "Peter MacDonald",
+      year: "1982",
+      color: "1",
+      duration: 93,
+    };
+
+    const response = await request(app).delete("/api/movies/0").send(newMovie);
 
     expect(response.status).toEqual(404);
   });
