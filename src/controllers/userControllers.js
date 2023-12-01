@@ -25,8 +25,8 @@ const getUsers = (req, res) => {
       res.json(results);
     })
     .catch((err) => {
-      console.error("Erreur lors de l'exécution de la requête SQL:", err);
-      res.status(500).send("Erreur lors de la récupération des utilisateurs");
+      console.error(err);
+      res.sendStatus(500);
     });
 };
 
